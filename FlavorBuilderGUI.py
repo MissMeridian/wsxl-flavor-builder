@@ -410,6 +410,7 @@ class MainWindow(QWidget):
         clockRow = QHBoxLayout()
         clockLabel = QLabel("Clock Enabled: ")
         self.clockBox = QCheckBox()
+        self.clockBox.setChecked(True)
         self.clockBox.stateChanged.connect(self.clock_toggle)
         clockRow.addWidget(clockLabel)
         clockRow.addWidget(self.clockBox)

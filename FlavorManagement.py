@@ -69,7 +69,6 @@ def error_check():
     flavor_name = flavor.get("name", "")
     misc_order = flavor.get("misc", {}).get("order", [])
     product_count, product_duration_total = get_total_products()
-    log.warning(product_count)
     if bool(re.search(r'[^A-Z0-9]', flavor_name)):
         errors.append("Flavor name contains an invalid character.")
     elif len(flavor_name) == 0:
@@ -87,7 +86,6 @@ def error_check():
         errors.append("Product count cannot be higher than 99!")
 
     #errors.append("Test error")
-    log.info(errors)
     return errors
 
 def update_product(index:int | None, name:str, duration):
