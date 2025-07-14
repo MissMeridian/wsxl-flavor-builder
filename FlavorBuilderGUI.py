@@ -501,10 +501,11 @@ class MainWindow(QWidget):
             self.refresh_flavor()
     
     def save_json_file(self):
+        suggested_path = os.path.join("flavor-data", f"{FM.flavor.get('name', 'flavor')}.json")
         file_path, _ = QFileDialog.getSaveFileName(
             self,
             "Save Flavor to JSON File",
-            "flavor-data",
+            suggested_path,
             "JSON Files (*.json);;All Files (*)"
         )
 
