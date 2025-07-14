@@ -446,7 +446,7 @@ class MainWindow(QWidget):
 
 
     def clock_toggle(self, state):
-        if state == Qt.Checked:
+        if state == Qt.CheckState.Checked.value: # compares int to int, resolving issue #1
             FM.update_clock_setting(True, self.total_product_length)
             log.info(f"On-screen clock enabled")
         else:
@@ -460,7 +460,7 @@ class MainWindow(QWidget):
         self.ErrorMessageLabel.setText(ErrorString)
 
     def init_flavor(self, state):
-        if state == Qt.Checked:
+        if state == Qt.CheckState.Checked.value: # compares int to int, resolving issue #1
             self.flavorInitMod.setEnabled(True)
             FM.flavor["init"] = True
         else:
