@@ -437,7 +437,7 @@ class MainWindow(QWidget):
         self.sensor_duration_label = QLabel(f"Sensors Length: 0 seconds")
         self.sensor_area = QScrollArea()
         self.sensor_area.setWidgetResizable(True)
-        self.sensor_area.setFixedHeight(95)
+        self.sensor_area.setFixedHeight(110)
         container_sensors = QFrame()
         self.sensors_layout_root = QVBoxLayout(container_sensors)
         self.sensors_layout_root.addWidget(self.sensor_duration_label)
