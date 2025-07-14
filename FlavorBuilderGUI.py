@@ -419,29 +419,41 @@ class MainWindow(QWidget):
         main_layout.addWidget(clockWidget)
 
         # PRODUCT ORDER CONTAINER
+        self.product_duration_label = QLabel(f"Products Length: 0 seconds")
         self.product_area = QScrollArea()
         self.product_area.setWidgetResizable(True)
         self.product_area.setFixedHeight(160)
         container_products = QFrame()
-        self.products_layout = QHBoxLayout(container_products)
+        self.products_layout_root = QVBoxLayout(container_products)
+        self.products_layout_root.addWidget(self.product_duration_label)
+        self.products_layout = QHBoxLayout()
         self.products_layout.setSpacing(10)
         self.product_area.setWidget(container_products)
+        self.products_layout_root.addLayout(self.products_layout)
         main_layout.addWidget(self.product_area)
         
         # SENSOR ORDER CONTAINER
+        self.sensor_duration_label = QLabel(f"Sensors Length: 0 seconds")
         self.sensor_area = QScrollArea()
         self.sensor_area.setWidgetResizable(True)
-        self.sensor_area.setFixedHeight(80)
+        self.sensor_area.setFixedHeight(95)
         container_sensors = QFrame()
-        self.sensors_layout = QHBoxLayout(container_sensors)
+        self.sensors_layout_root = QVBoxLayout(container_sensors)
+        self.sensors_layout_root.addWidget(self.sensor_duration_label)
+        self.sensors_layout = QHBoxLayout()
         self.sensors_layout.setSpacing(10)
+        self.sensors_layout_root.addLayout(self.sensors_layout)
         self.sensor_area.setWidget(container_sensors)
         main_layout.addWidget(self.sensor_area)
+
+        self.lf_length_label = QLabel(f"Total Forecast Length: 0 seconds")
 
         # PRODUCTS AND SENSORS (NONE BY DEFAULT)
         self.get_products()
         self.get_sensors()
 
+
+        main_layout.addWidget(self.lf_length_label)
 
         self.setLayout(main_layout)
 
@@ -666,8 +678,11 @@ class MainWindow(QWidget):
 
     def get_products(self):
         container_products = QFrame()
-        self.products_layout = QHBoxLayout(container_products)
+        self.products_layout_root = QVBoxLayout(container_products)
+        self.products_layout_root.addWidget(self.product_duration_label)
+        self.products_layout = QHBoxLayout()
         self.products_layout.setSpacing(10)
+        self.products_layout_root.addLayout(self.products_layout)
         self.product_area.setWidget(container_products)
         products_list = FM.get_products()
         i = 0
@@ -698,7 +713,8 @@ class MainWindow(QWidget):
         self.total_product_count, self.total_product_length = FM.get_total_products()
         if self.clockBox.isChecked():
             FM.update_clock_setting(True, self.total_product_length)
-        
+        self.product_duration_label.setText(f"Products Length: {self.total_product_length} seconds")
+        self.lf_length_label.setText(f"Total Forecast Length: {self.total_product_length} seconds")
 
         # ADD PRODUCT BUTTON AT THE END
         addproductbtn = QToolButton()
@@ -712,8 +728,11 @@ class MainWindow(QWidget):
 
     def get_sensors(self):
         container_sensors = QFrame()
-        self.sensors_layout = QHBoxLayout(container_sensors)
+        self.sensors_layout_root = QVBoxLayout(container_sensors)
+        self.sensors_layout_root.addWidget(self.sensor_duration_label)
+        self.sensors_layout = QHBoxLayout()
         self.sensors_layout.setSpacing(10)
+        self.sensors_layout_root.addLayout(self.sensors_layout)
         self.sensor_area.setWidget(container_sensors)
         sensors_list = FM.get_sensors()
         i = 0
@@ -740,7 +759,7 @@ class MainWindow(QWidget):
                 FM.remove_product(i)
                 i -= 1
         self.total_sensor_count, self.total_sensor_length = FM.get_total_sensors()
-    
+        self.sensor_duration_label.setText(f"Sensors Length: {self.total_sensor_length} seconds")
 
         btn = QToolButton()
         btn.setIcon(QIcon("app/add_sens.png"))

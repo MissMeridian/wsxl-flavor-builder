@@ -10,8 +10,13 @@
     },
     "duration": "1 sec",
     "sensors": {
-        "order": [],
-        "count": 0
+        "order": [
+            {
+                "name": "par_cur001",
+                "duration": 10
+            }
+        ],
+        "count": 1
     },
     "init": true,
     "modifiers": "IfValidAppend(l_nws001a_valid c_flavmod_nws1)",
