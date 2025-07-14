@@ -1,0 +1,28 @@
+{
+    "products": {
+        "order": [
+            {
+                "name": "cci001a",
+                "duration": 1
+            }
+        ],
+        "count": 1
+    },
+    "duration": "1 sec",
+    "sensors": {
+        "order": [],
+        "count": 0
+    },
+    "init": true,
+    "modifiers": "IfValidAppend(l_nws001a_valid c_flavmod_nws1)",
+    "name": "TEST",
+    "misc": {
+        "count": 1,
+        "order": [
+            {
+                "name": "clock",
+                "duration": 1
+            }
+        ]
+    }
+}
