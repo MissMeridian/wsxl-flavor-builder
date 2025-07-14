@@ -1,0 +1,62 @@
+{
+    "comment": "This is a basic flavor, D, without flavor modifiers.",
+    "name": "D",
+    "sensors": {
+        "count": 1,
+        "order": [
+            {
+                "name": "par_crl001",
+                "duration": "48"
+            }
+        ]
+    },
+    "misc": {
+        "count": 1,
+        "order": [
+            {
+                "name": "clock",
+                "duration": 60
+            }
+        ]
+    },
+    "init": true,
+    "modifiers": null,
+    "products": {
+        "count": 8,
+        "order": [
+            {
+                "name": "cci001a",
+                "duration": "1"
+            },
+            {
+                "name": "cc001a",
+                "duration": "9"
+            },
+            {
+                "name": "24fi001",
+                "duration": "1"
+            },
+            {
+                "name": "24f001a",
+                "duration": "11"
+            },
+            {
+                "name": "24f001b",
+                "duration": "10"
+            },
+            {
+                "name": "exi002a",
+                "duration": ".5"
+            },
+            {
+                "name": "ex002a",
+                "duration": "15.5"
+            },
+            {
+                "name": "rad001a",
+                "duration": "12"
+            }
+        ]
+    },
+    "duration": "60.0 sec"
+}
