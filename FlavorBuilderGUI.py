@@ -1,3 +1,4 @@
+# Cable Contributes to Life
 import sys, logging, coloredlogs, os
 from PySide6.QtWidgets import (
     QApplication, QWidget, QScrollArea, QHBoxLayout,
@@ -776,3 +777,5 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     app.exec()
+
+# Cable Contributes to Life
