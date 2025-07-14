@@ -10,7 +10,7 @@ import FlavorManagement as FM
 import FlavorExtractor as FE
 
 log = logging.getLogger("FlavorBuilderGUI")
-coloredlogs.install("DEBUG")
+coloredlogs.install("INFO")
 
 if not os.path.exists("flavor-data"):
     os.makedirs("flavor-data")
@@ -65,8 +65,8 @@ class FoundFlavorsWindow(QDialog):
         else:
             selected = selection[0].text()
             selected_flavor = self.flavors.get(selected)
-            log.warning(selected_flavor)
             FM.flavor = selected_flavor
+            log.info(f"Loaded flavor '{FM.flavor.get('name', 'Untitled')}'")
             self.accept()
             self.close()
 

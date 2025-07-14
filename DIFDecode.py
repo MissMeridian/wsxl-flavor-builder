@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import logging, coloredlogs
 log = logging.getLogger(__name__)
-coloredlogs.install("DEBUG")
+coloredlogs.install("INFO")
 
 def find_byte_pair(file_content, byte_pair):
     ### CREDIT TO NEEDLENOSE https://github.com/needlen0se ###

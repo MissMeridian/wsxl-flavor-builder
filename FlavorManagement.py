@@ -2,7 +2,7 @@
 import json, re, time
 import logging, coloredlogs
 log = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG")
+coloredlogs.install(level="INFO")
 
 flavor = {}
 
