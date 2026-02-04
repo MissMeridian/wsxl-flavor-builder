@@ -47,6 +47,7 @@ Then run [FlavorBuilderGUI.py](https://github.com/MissMeridian/wsxl-flavor-build
   - You can the name and duration of existing products/sensors with the same menu.
   - Right clicking a product/sensor will reveal a context menu revealing additional options:
     - You can change the position of a product/sensor in the flavor sequence
+    - You can quickly delete a product/sensor in the flavor sequence
 
 ## Support and Feedback
 If you experience problems with the Flavor Builder, please report them in [issues](https://github.com/MissMeridian/wsxl-flavor-builder/issues). Provide as much information as possible, including the version of Python you're running.

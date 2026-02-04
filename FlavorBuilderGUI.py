@@ -728,6 +728,8 @@ class MainWindow(QWidget):
         menu = QMenu()
         move_action = menu.addAction("Change sensor number")
         move_action.triggered.connect(lambda: RenumberWindow(index, "sensors").exec())
+        delete_action = menu.addAction("Delete")
+        delete_action.triggered.connect(lambda: FM.remove_sensor(index))
         menu.exec(button.mapToGlobal(pos))
         self.get_sensors()
 
@@ -735,6 +737,8 @@ class MainWindow(QWidget):
         menu = QMenu()
         move_action = menu.addAction("Change product number")
         move_action.triggered.connect(lambda: RenumberWindow(index, "products").exec())
+        delete_action = menu.addAction("Delete")
+        delete_action.triggered.connect(lambda: FM.remove_product(index))
         menu.exec(button.mapToGlobal(pos))
         self.get_products()
 
