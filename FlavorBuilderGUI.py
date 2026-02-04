@@ -3,7 +3,7 @@ import sys, logging, coloredlogs, os
 from PySide6.QtWidgets import (
     QApplication, QWidget, QScrollArea, QHBoxLayout,
     QVBoxLayout, QPushButton, QFrame, QFileDialog, QToolButton,
-    QLabel, QLineEdit, QDialog, QMessageBox, QCheckBox, QListWidget, QListWidgetItem, QAbstractItemView
+    QLabel, QLineEdit, QDialog, QMessageBox, QCheckBox, QListWidget, QListWidgetItem, QAbstractItemView, QMenu
 )
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QSize, Qt
@@ -125,6 +125,53 @@ class FoundFlavorsWindow(QDialog):
             QMessageBox.warning(self, "Warning", warning)
     
 
+class RenumberWindow(QDialog):
+    def __init__(self, index, product_type:str="products"):
+        self.index = index
+        self.prod_type = product_type
+        super().__init__()
+        self.resize(350, 100)
+        layout = QVBoxLayout()
+        
+        self.setWindowTitle("Renumber Product/Sensor")
+
+        renumberRow = QHBoxLayout()
+        renumberLabel = QLabel("New index number: ")
+        self.renumberEditBox = QLineEdit()
+        self.renumberEditBox.setPlaceholderText("Enter new product position number... (integer)")
+        renumberRow.addWidget(renumberLabel)
+        renumberRow.addWidget(self.renumberEditBox)
+        renumberWidget = QWidget()
+        renumberWidget.setLayout(renumberRow)
+
+        ## CONFIRM BUTTON
+        renumberOptionsRow = QHBoxLayout()
+        self.renumberBtn = QPushButton("Confirm")
+        self.renumberBtn.clicked.connect(self.renumber_prod)
+        renumberOptionsRow.addWidget(self.renumberBtn)
+        renumberOptionsWidget = QWidget()
+        renumberOptionsWidget.setLayout(renumberOptionsRow)
+        
+        ## ERROR
+        self.ErrorMessageLabel = QLabel("")
+        self.ErrorMessageLabel.setStyleSheet("color: red;")
+
+        layout.addWidget(renumberWidget)
+        layout.addWidget(self.ErrorMessageLabel)
+        layout.addWidget(renumberOptionsWidget)
+
+        self.setLayout(layout)
+
+
+    def renumber_prod(self):
+        log.debug(f"Attempting to re-order {self.prod_type}")
+        new_i = self.renumberEditBox.text()
+        response = FM.renumber(index=self.index, new_index=new_i, prod_type=self.prod_type)
+        if response == "OK":
+            self.accept()
+            self.close()
+        else:
+            self.ErrorMessageLabel.setText(response)
 
 
 
@@ -677,6 +724,20 @@ class MainWindow(QWidget):
     def add_sensor(self):
         self.edit_sensor(None) # No index if new
 
+    def sensor_context_menu(self, button, pos, index):
+        menu = QMenu()
+        move_action = menu.addAction("Change sensor number")
+        move_action.triggered.connect(lambda: RenumberWindow(index, "sensors").exec())
+        menu.exec(button.mapToGlobal(pos))
+        self.get_sensors()
+
+    def product_context_menu(self, button, pos, index):
+        menu = QMenu()
+        move_action = menu.addAction("Change product number")
+        move_action.triggered.connect(lambda: RenumberWindow(index, "products").exec())
+        menu.exec(button.mapToGlobal(pos))
+        self.get_products()
+
     def get_products(self):
         container_products = QFrame()
         self.products_layout_root = QVBoxLayout(container_products)
@@ -705,6 +766,11 @@ class MainWindow(QWidget):
                 btn.setCheckable(False)
                 btn.clicked.connect(lambda *args, n=i: self.edit_product(n))
                 self.products_layout.addWidget(btn)
+                # 2/3/2026 right-click "move product" option
+                btn.setContextMenuPolicy(Qt.CustomContextMenu)
+                btn.customContextMenuRequested.connect(lambda pos, b=btn, i=i: self.product_context_menu(b, pos, i))
+
+
                 i += 1 # up the index AFTER adding product to list
             else:
                 i += 1
@@ -752,6 +818,10 @@ class MainWindow(QWidget):
                 btn.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
                 btn.setCheckable(False)
                 btn.clicked.connect(lambda *args, n=i: self.edit_sensor(n))
+                # 2/3/2026 right-click "move product" option
+                btn.setContextMenuPolicy(Qt.CustomContextMenu)
+                btn.customContextMenuRequested.connect(lambda pos, b=btn, i=i: self.sensor_context_menu(b, pos, i))
+
                 self.sensors_layout.addWidget(btn)
                 i += 1
             else:

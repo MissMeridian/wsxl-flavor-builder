@@ -143,6 +143,129 @@ def remove_product(index:int):
         log.error(f"What tf happened")
         return None
 
+def renumber(index:int, new_index:int, prod_type:str="products"):
+    # 2/3/2026: Allows products to be relocated without changing settings.
+    "Renumber a product's index within a flavor sequence. prod_type can be products or sensors"
+    global flavor
+    try:
+        new_index = int(new_index) # force string to int
+        prods = flavor[prod_type]["order"]
+        prod = prods[index]
+        prod_name = prod["name"]
+        log.debug(f"Moving product {index} ('{prod_name}') to position {new_index} in flavor.")
+
+
+        if(new_index + 1) >= len(prods): # if the new index number exceeds or equals the product count
+            if (new_index) >= len(prods):
+                log.debug(f"Entered value ({new_index}) exceeded the maximum product index ({len(prods)}).")
+                new_index = len(prods) - 1 
+
+            prods_to_move = prods[(index+1):(len(prods))] # we need to move every product after the current index DOWN by 1
+
+            new_product_order = []
+            for i in range(index): # for every product until the existing index
+                i_name = prods[i]["name"]
+                log.debug(f"Product '{i_name}' will remain in its place ({i}).")
+                new_product_order.append(prods[i]) # append existing, unmoved products to the new order
+            
+            for p in prods_to_move:
+                i += 1
+                p_name = p["name"]
+                log.debug(f"Moving product '{p_name}' to new position ({i}).")
+                new_product_order.append(p)
+            
+            log.debug(f"Moving product '{prod_name}' ({index}) to new position ({new_index}).")
+            new_product_order.append(prod)
+
+            log.debug(f"Setting new product order.")
+            flavor[prod_type]["order"] = new_product_order # override the global flavor's product order with our new one
+
+            return "OK"
+        else:
+            new_product_order = []
+
+            if new_index < index: # IF NEW PRODUCT INDEX IS BEFORE CURRENT INDEX...
+                # KEEP "BEFORE" PRODUCTS IN PLACE...
+                if index != 0:
+                    prods_to_move = prods[0:(new_index)]
+                else: prods_to_move = []
+                i = 0
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.debug(f"Product '{p_name}' will remain in its place ({i}).")
+                    new_product_order.append(p) # append products before the product being moved, if it works
+                    i += 1
+                
+                # PUT THE PRODUCT IN ITS NEW TARGET INDEX
+                log.debug(f"Moving product '{prod_name}' to new position ({i}).")
+                new_product_order.append(prod)
+                i += 1
+
+                # NOW, WE COLLECT THE PRODUCTS THAT NEED TO BE MOVED UP 1 INDEX (AFTER THE NEW TARGET POS, BUT BEFORE THE OLD POS)
+                prods_to_move = prods[new_index:(index)] 
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.debug(f"Moving product '{p_name}' to new position ({i}).")
+                    new_product_order.append(p)
+                    i += 1
+
+                # LAST, WE COLLECT THE PRODUCTS AFTER THE EXISTING INDEX
+                prods_to_move = prods[(index+1):len(prods)] 
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.debug(f"Moving product '{p_name}' to new position ({i}).")
+                    new_product_order.append(p)
+                    i += 1
+
+                log.debug(f"Setting new product order.")
+                flavor[prod_type]["order"] = new_product_order # override the global flavor's product order with our new one
+                return "OK"
+            
+            elif index < new_index: # IF THE NEW PRODUCT INDEX IS *AFTER* THE CURRENT INDEX....
+                #log.warning("beep!")
+                # KEEP PRODUCTS BEFORE THE CURRENT INDEX NUMBER
+                if index != 0:
+                    prods_to_move = prods[0:(index)]
+                else: prods_to_move = []
+                i = 0
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.debug(f"Product '{p_name}' will remain in its place ({i}).")
+                    new_product_order.append(p) # append products before the product being moved, if it works
+                    i += 1
+                # NOW, DO ALL PRODUCTS AFTER THE CURRENT INDEX BUT BEFORE THE NEW INDEX
+                prods_to_move = prods[index+1:(new_index+1)] 
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.warning(f"Moving product '{p_name}' to new position ({i}).")
+                    new_product_order.append(p)
+                    i += 1
+                # ADD THE PRODUCT TO ITS NEW INDEX
+                log.debug(f"Moving product '{prod_name}' to new position ({i}).")
+                new_product_order.append(prod)
+                i += 1
+
+                # LAST, WE COLLECT THE PRODUCTS AFTER THE NEW INDEX
+                prods_to_move = prods[(new_index+1):len(prods)] 
+                for p in prods_to_move:
+                    p_name = p["name"]
+                    log.debug(f"Moving product '{p_name}' to new position ({i}).")
+                    new_product_order.append(p)
+                    i += 1
+
+                log.debug(f"Setting new product order.")
+                flavor[prod_type]["order"] = new_product_order # override the global flavor's product order with our new one
+                return "OK"
+
+
+    
+    except Exception as e:
+        error = f"Error trying to move product {index} to position {new_index}:\n{e}"
+        log.error(error, exc_info=True)
+        return error
+    except:
+        log.error("What tf happened")
+        return None
 
 
 def update_sensor(index:int | None, name:str, duration):
